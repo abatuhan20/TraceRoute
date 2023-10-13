@@ -611,9 +611,7 @@
              {
                  ICMPPacket p = (ICMPPacket)captor.getPacket ();
                  long tDelay = (int)((System.nanoTime() - tStart) / 1000000L);
-                totalTime += tDelay;
                 minDelay = Math.min(minDelay, tDelay);
-                maxDelay = Math.max(maxDelay, tDelay);
                     
                  if( p == null ) // TIMEOUT
                  {
@@ -675,6 +673,8 @@
                      tStart = System.nanoTime ();
                      sender.sendPacket( icmp );
                      hopCount++;
+                     totalTime += tDelay;
+                     maxDelay = Math.max(maxDelay, tDelay);
                  }
                  else if( p.type == ICMPPacket.ICMP_UNREACH ) // Host unreachable
                  {
@@ -684,6 +684,7 @@
                  else if( p.type == ICMPPacket.ICMP_ECHOREPLY ) // Echo reply (pong)
                  {
                      print( hopID + ", " + tDelay + " ms Hedef siteye ulasildi.", /*ts*/ false );
+                     hopCount++;
                      if ( initialTTL != 0 ) {
                          println( hopID + " is alive." );
                      }

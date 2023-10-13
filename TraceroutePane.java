@@ -20,18 +20,9 @@
  import javax.swing.JTextField;
  import javax.swing.WindowConstants;
  
- /**
-  *  Trace-route/ping application using ICMP from Jpcap
-  * 
-  *  @author Mikica B Kocic
-  */
+
  public class TraceroutePane extends JFrame implements Traceroute.Context
  {
-     /**
-      *  Implements java.io.Serializable interface
-      */
-     private static final long serialVersionUID = 3590355845490077407L;
- 
      /*  GUI components
       */
      private JButton     startButton;
@@ -39,7 +30,8 @@
      private JTextArea   logArea;
      private Traceroute  tracer;
      private JComboBox   ifaceList;
-     
+     private JComboBox   sorguComboBox;
+     String[] sorguSecenekleri = {"1", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000"};
      /**
       *  Creates a new instance of the <code>ChatClientFrame</code>.
       *  
@@ -58,11 +50,10 @@
          Font textFont = new Font( Font.SANS_SERIF, Font.PLAIN, 14 );
          Font logFont  = new Font( Font.MONOSPACED, Font.PLAIN, 16 );
          
-         inputCmd = new JTextField( "atlas.dsv.su.se" );
+         inputCmd = new JTextField( "ticaret.edu.tr" );
          inputCmd.setFont( textFont );
          inputCmd.setColumns( 30 );
          inputCmd.selectAll ();
- 
          startButton = new JButton ();
          startButton.setText( "Go!" );
          startButton.setForeground( Color.black );
@@ -74,7 +65,12 @@
                      }
                  }
              );
- 
+        sorguComboBox = new JComboBox(sorguSecenekleri);
+        sorguComboBox.addActionListener(e -> {
+            String secilenSorgu = (String) sorguComboBox.getSelectedItem();
+            // Seçilen sorguyla ilgili işlemi burada gerçekleştirin.
+            // Örneğin, seçilen sorguyu bir değişkene kaydedebilir veya başka bir işlemi başlatabilirsiniz.
+        });
          ifaceList = new JComboBox ();
          ifaceList.setEditable( false );
          
@@ -123,6 +119,7 @@
                          .addComponent( startButton, 80, 80, 80 )
                          .addComponent( inputCmd )
                          .addComponent( ifaceList, 100, 300, 300 )
+                         .addComponent( sorguComboBox, 100, 300, 300 )
                              
                      )
                      .addComponent( logPane )
@@ -145,6 +142,7 @@
                      .addComponent( startButton )
                      .addComponent( inputCmd, Alignment.CENTER, 0, 27, 27 )
                      .addComponent( ifaceList, Alignment.CENTER, 0, 26, 26 )
+                     .addComponent( sorguComboBox, Alignment.CENTER, 0, 26, 26)
                  )
                  .addComponent( logPane )
              )
@@ -393,6 +391,10 @@
              /* Start trace-route/ping. TTL is set to 64 if second word in cmd line
               * is 'ping'.
               */
+              String secilenSorgu = (String) sorguComboBox.getSelectedItem();
+              if(secilenSorgu.equals(1)) {
+               System.out.println(secilenSorgu);
+              }
              tracer.startPinging( ifaceList.getSelectedIndex (), args[0], ping ? 64 : 0 );
          }
          else
